@@ -1,39 +1,291 @@
 <html>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
 <head>
-    <!-- little bit of css to beutify the table -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script type="text/javascript">
-$(document).ready(function () {
-    $.getJSON("http://localhost:8080/movies/",
-    function (json) {
-        var tr;
-        for (var i = 0; i < json.length; i++) {
-            tr = $('<tr/>');
-            tr.append("<td>" + json[i].id + "</td>");
-            tr.append("<td>" + json[i].title + "</td>");
-            tr.append("<td>" + json[i].author + "</td>");
-            $('table').append(tr);
-        }
-    });
-});
-</script>
+        $(document).ready(function () {
+            $.getJSON("http://localhost:8080/movies/",
+                function getAllMovies(json) {
+                    var tr;
+                    for (var i = 0; i < json.length; i++) {
+                        tr = $('<tr/>');
+                        tr.append("<td>" + json[i].id + "</td>");
+                        tr.append("<td>" + json[i].title + "</td>");
+                        tr.append("<td>" + json[i].author + "</td>");
+                        tr.append(`<input class="deleteItem" type="button" id="${json[i].id}" value="Delete Movie"></td>`)
+                        $('.mainTable table').append(tr);
+                    }
+                    $("input.deleteItem").click(function (event) {
+                        let idToDelete = event.target.id
+                        let hideRow = $(`td:has(input[id=${idToDelete}])`).hide()
+                        let deleteIdUrl = "http://localhost:8080/movies/delete/" + BigInt(idToDelete)
+                        $.ajax({
+                            url: deleteIdUrl,
+                            type: "DELETE",
+                            dataType: "json",
+                            success: setTimeout(function () {
+                                 location.reload(true)
+                             }, 1000)
+
+                        })
+                    })
+                });
+        })
+    </script>
 </head>
+
 <body>
-<h1 style="font-size: 50;">Movies Database</h1>
-<div style="margin-top: 10%;">
-        <!-- table to show data -->
-        <table class="greyGridTable">
+
+    <div class="mainTable">
+        <h1 style="font-size: 50;">Movies Database</h1>
+        <input class="hideTable" type="button" value="Hide Table">
+        <input class="showTable" type="button" value="Show Table">
+
+        <table class="table main">
             <thead>
-            <tr>
-                <th>ID &nbsp;</th>
-                <th>Title&nbsp;</th>
-                <th>Author&nbsp;</th>
-            </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
-    </fieldset>
-</div>
+        <script type="text/javascript">
+            $(".mainTable .hideTable").click(
+                function hideTable() {
+                    $(".mainTable table").hide()
+                })
+
+            $(".mainTable .showTable").click(
+                function showTable() {
+                    $(".mainTable table").show()
+                })
+        </script>
+    </div>
+    <div class="getTitle">
+        <h2>Get by Title</h2>
+        <div class="formTitle">
+            <form action="http://localhost:8080/movies/name" method="Get">
+                <label for="title">Title:</label>
+                <input class="contentButton" type="text" id="title" name="title">
+                <input class="getTitleButton" type="button" value="Find">
+                <input class="resetTitle" type="button" value="Reset">
+
+            </form>
+            <table class="title Table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                let inputTitle = $(".getTitle .contentButton").val()
+                $(".getTitle table").hide()
+                let urlTitle = "http://localhost:8080/movies/name/"
+                $(".getTitleButton").click(
+                    function getTitle() {
+                        $(".getTitle table").show()
+                        let inputTitle = $(".contentButton").val()
+                        $.getJSON(urlTitle + inputTitle,
+                            function (json) {
+                                tr = $('<tr/>');
+                                tr.append("<td>" + json.id + "</td>");
+                                tr.append("<td>" + json.title + "</td>");
+                                tr.append("<td>" + json.author + "</td>");
+                                $('.getTitle table').append(tr);
+                            })
+                    })
+                //RESET THE TABLE 
+                $(".resetTitle").click(
+                    function resetTitle() {
+                        $('.getTitle table td').remove();
+                        $(".getTitle table").hide()
+                    })
+            </script>
+        </div>
+    </div>
+    <div class="getAuthor">
+        <h2>Get by Author</h2>
+        <div class="formAuthor">
+            <form action="http://localhost:8080/movies/name" method="Get">
+                <label for="Author">Author:</label>
+                <input class="contentButton" type="text" id="author" name="author">
+                <input class="getAuthorButton" type="button" value="Find">
+                <input class="resetAuthor" type="button" value="Reset">
+            </form>
+            <table class="author Table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script type="text/javascript">
+                $(".getAuthor table").hide()
+                let inputAuthor = $(".getAuthor .contentButton").val()
+                let urlAuthor = "http://localhost:8080/movies/author/"
+                $(".getAuthorButton").click(
+                    function getAuthor() {
+                        $(".getAuthor table").show()
+                        let inputAuthor = $(".getAuthor .contentButton").val()
+                        $.getJSON(urlAuthor + inputAuthor,
+                            function (json) {
+
+                                tr = $('<tr/>');
+                                tr.append("<td>" + json.id + "</td>");
+                                tr.append("<td>" + json.title + "</td>");
+                                tr.append("<td>" + json.author + "</td>");
+                                $('.getAuthor table').append(tr);
+
+                            })
+                    })
+                //RESET THE TABLE 
+                $(".resetAuthor").click(
+                    function resetAuthor() {
+                        $('.getAuthor table td').remove();
+                        $(".getAuthor table").hide()
+                    })
+            </script>
+        </div>
+    </div>
+    <div class="getID">
+        <h2>Get by ID</h2>
+        <div class="formID">
+            <form action="http://localhost:8080/movies/name" method="Get">
+                <label for="ID">ID:</label>
+                <input class="contentButton" type="text" id="ID" name="ID">
+                <input class="getIDButton" type="button" value="Find">
+                <input class="resetID" type="button" value="Reset">
+
+            </form>
+            <table class="ID Table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <script type="text/javascript">
+                $(".getID table").hide()
+                let inputID = $(".getID .contentButton").val()
+                let urlID = "http://localhost:8080/movies/id/"
+                $(".getIDButton").click(
+                    function getID() {
+                        $(".getID table").show()
+                        let inputID = $(".getID .contentButton").val()
+                        $.getJSON(urlID + inputID,
+                            function (json) {
+                                tr = $('<tr/>');
+                                tr.append("<td>" + json.id + "</td>");
+                                tr.append("<td>" + json.title + "</td>");
+                                tr.append("<td>" + json.id + "</td>");
+                                $('.getID table').append(tr);
+                            })
+                    })
+                //RESET THE TABLE 
+                $(".resetID").click(
+                    function resetID() {
+                        $('.getID table td').remove();
+                        $(".getID table").hide()
+                        let inputNew
+                    })
+            </script>
+        </div>
+    </div>
+    <div class="postMovie">
+        <h1>Post a Movie</h1>
+        <div class="postForm">
+            <form class="postData">
+                <label for="author">Author:</label>
+                <input class="authorContent" type="text" name="author"><br>
+                <label for="title">Title:</label>
+                <input class="titleContent" type="text" name="title"><br>
+                <input class="postButton" type="button" value="Add new movie" onclick="reloadPage()">
+            </form>
+        </div>
+        <script type="text/javascript">
+
+            let urlPost = "http://localhost:8080/movies"
+            $(".postButton").click(function postMovie() {
+                let newAuthor = $(".postMovie .authorContent").val().trim()
+                let newTitle = $(".postMovie .titleContent").val().trim()
+                if (newTitle.length < 1) {
+                    newTitle = null
+                }
+                else if (newAuthor.length < 1) {
+                    newAuthor = null
+                }
+                $.ajax({
+                    url: urlPost,
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "author": newAuthor,
+                        "title": newTitle
+                    }),
+                    success: setTimeout(function () {
+                        location.reload(true)
+                    }, 1000)
+                })
+            })
+        </script>
+    </div>
+    <div class="updateMovie">
+        <h1>Update a Movie</h1>
+        <div class="updateForm">
+            <form class="updateData">
+                <label for="id">ID:</label>
+                <input class="idContent" type="text" name="id"><br>
+                <label for="author">Author:</label>
+                <input class="authorContent" type="text" name="author"><br>
+                <label for="title">Title:</label>
+                <input class="titleContent" type="text" name="title"><br>
+                <input class="updateButton" type="button" value="Update a movie">
+            </form>
+        </div>
+        <script type="text/javascript">
+
+            let urlUpdate = "http://localhost:8080/movies/put/"
+            $(".updateButton").click(function updateMovie() {
+                let id = $(".updateMovie .idContent").val()
+                let newAuthor = $(".updateMovie .authorContent").val().trim()
+                let newTitle = $(".updateMovie .titleContent").val().trim()
+                urlUpdate = urlUpdate + id
+                $.ajax({
+                    url: urlUpdate,
+                    type: "PUT",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "author": newAuthor,
+                        "title": newTitle
+                    })
+                })
+                location.reload(true)
+            })
+
+        </script>
+    </div>
 </body>
+
 </html>
