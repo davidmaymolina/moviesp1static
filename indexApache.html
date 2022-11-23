@@ -20,7 +20,7 @@
                     $("input.deleteItem").click(function (event) {
                         let idToDelete = event.target.id
                         let hideRow = $(`td:has(input[id=${idToDelete}])`).hide()
-                        let deleteIdUrl = "http://localhost:8080/movies/delete/" + BigInt(idToDelete)
+                        let deleteIdUrl = "http://localhost:8080/movies/delete/" + idToDelete
                         $.ajax({
                             url: deleteIdUrl,
                             type: "DELETE",
@@ -91,7 +91,7 @@
             <script type="text/javascript">
                 let inputTitle = $(".getTitle .contentButton").val()
                 $(".getTitle table").hide()
-                let urlTitle = "http://localhost:8080/movies/name/"
+                let urlTitle = "http://localhost:8080/movies/title/"
                 $(".getTitleButton").click(
                     function getTitle() {
                         $(".getTitle table").show()
@@ -224,7 +224,7 @@
         </div>
         <script type="text/javascript">
 
-            let urlPost = "http://localhost:8080/movies"
+            let urlPost = "http://localhost:8080/movies/post"
             $(".postButton").click(function postMovie() {
                 let newAuthor = $(".postMovie .authorContent").val().trim()
                 let newTitle = $(".postMovie .titleContent").val().trim()
@@ -279,9 +279,12 @@
                     data: JSON.stringify({
                         "author": newAuthor,
                         "title": newTitle
-                    })
+                    }),
+                    success:setTimeout(function () {
+                        location.reload(true)
+                    }, 1000)
                 })
-                location.reload(true)
+
             })
 
         </script>
