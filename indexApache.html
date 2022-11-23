@@ -6,7 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.getJSON("http://localhost:8080/movies/",
+            $.getJSON("http://20.253.106.251:8085/movies/",
                 function getAllMovies(json) {
                     var tr;
                     for (var i = 0; i < json.length; i++) {
@@ -20,7 +20,7 @@
                     $("input.deleteItem").click(function (event) {
                         let idToDelete = event.target.id
                         let hideRow = $(`td:has(input[id=${idToDelete}])`).hide()
-                        let deleteIdUrl = "http://localhost:8080/movies/delete/" + idToDelete
+                        let deleteIdUrl = "http://20.253.106.251:8085/movies/delete/" + idToDelete
                         $.ajax({
                             url: deleteIdUrl,
                             type: "DELETE",
@@ -70,7 +70,7 @@
     <div class="getTitle">
         <h2>Get by Title</h2>
         <div class="formTitle">
-            <form action="http://localhost:8080/movies/name" method="Get">
+            <form action="http://20.253.106.251:8085/movies/name" method="Get">
                 <label for="title">Title:</label>
                 <input class="contentButton" type="text" id="title" name="title">
                 <input class="getTitleButton" type="button" value="Find">
@@ -91,7 +91,7 @@
             <script type="text/javascript">
                 let inputTitle = $(".getTitle .contentButton").val()
                 $(".getTitle table").hide()
-                let urlTitle = "http://localhost:8080/movies/title/"
+                let urlTitle = "http://20.253.106.251:8085/movies/title/"
                 $(".getTitleButton").click(
                     function getTitle() {
                         $(".getTitle table").show()
@@ -117,7 +117,7 @@
     <div class="getAuthor">
         <h2>Get by Author</h2>
         <div class="formAuthor">
-            <form action="http://localhost:8080/movies/name" method="Get">
+            <form action="http://20.253.106.251:8085/movies/name" method="Get">
                 <label for="Author">Author:</label>
                 <input class="contentButton" type="text" id="author" name="author">
                 <input class="getAuthorButton" type="button" value="Find">
@@ -137,7 +137,7 @@
             <script type="text/javascript">
                 $(".getAuthor table").hide()
                 let inputAuthor = $(".getAuthor .contentButton").val()
-                let urlAuthor = "http://localhost:8080/movies/author/"
+                let urlAuthor = "http://20.253.106.251:8085/movies/author/"
                 $(".getAuthorButton").click(
                     function getAuthor() {
                         $(".getAuthor table").show()
@@ -165,7 +165,7 @@
     <div class="getID">
         <h2>Get by ID</h2>
         <div class="formID">
-            <form action="http://localhost:8080/movies/name" method="Get">
+            <form action="http://20.253.106.251:8085/movies/name" method="Get">
                 <label for="ID">ID:</label>
                 <input class="contentButton" type="text" id="ID" name="ID">
                 <input class="getIDButton" type="button" value="Find">
@@ -187,7 +187,7 @@
             <script type="text/javascript">
                 $(".getID table").hide()
                 let inputID = $(".getID .contentButton").val()
-                let urlID = "http://localhost:8080/movies/id/"
+                let urlID = "http://20.253.106.251:8085/movies/id/"
                 $(".getIDButton").click(
                     function getID() {
                         $(".getID table").show()
@@ -224,7 +224,7 @@
         </div>
         <script type="text/javascript">
 
-            let urlPost = "http://localhost:8080/movies/post"
+            let urlPost = "http://20.253.106.251:8085/movies/post"
             $(".postButton").click(function postMovie() {
                 let newAuthor = $(".postMovie .authorContent").val().trim()
                 let newTitle = $(".postMovie .titleContent").val().trim()
@@ -265,7 +265,7 @@
         </div>
         <script type="text/javascript">
 
-            let urlUpdate = "http://localhost:8080/movies/put/"
+            let urlUpdate = "http://20.253.106.251:8085/movies/put/"
             $(".updateButton").click(function updateMovie() {
                 let id = $(".updateMovie .idContent").val()
                 let newAuthor = $(".updateMovie .authorContent").val().trim()
